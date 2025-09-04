@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prahlad Yadav - Creative Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'gradient': 'gradient 8s ease infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        gradient: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(-45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+        }
+        
+        .glass {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold text-white">PY</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="text-white hover:text-yellow-300 transition-colors duration-300">Home</a>
+                    <a href="#about" class="text-white hover:text-yellow-300 transition-colors duration-300">About</a>
+                    <a href="#skills" class="text-white hover:text-yellow-300 transition-colors duration-300">Skills</a>
+                    <a href="#contact" class="text-white hover:text-yellow-300 transition-colors duration-300">Contact</a>
+                </div>
+                <button id="menuBtn" class="md:hidden text-white text-2xl">☰</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 glass transform -translate-x-full transition-transform duration-300 md:hidden">
+        <div class="flex flex-col items-center justify-center h-full space-y-8 text-2xl">
+            <a href="#home" class="text-white hover:text-yellow-300 transition-colors duration-300">Home</a>
+            <a href="#about" class="text-white hover:text-yellow-300 transition-colors duration-300">About</a>
+            <a href="#skills" class="text-white hover:text-yellow-300 transition-colors duration-300">Skills</a>
+            <a href="#contact" class="text-white hover:text-yellow-300 transition-colors duration-300">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative px-6">
+        <!-- Floating Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-20 w-32 h-32 bg-white bg-opacity-10 rounded-full animate-float"></div>
+            <div class="absolute top-40 right-32 w-24 h-24 bg-yellow-300 bg-opacity-20 rounded-full animate-bounce-slow"></div>
+            <div class="absolute bottom-32 left-32 w-40 h-40 bg-pink-400 bg-opacity-10 rounded-full animate-pulse-slow"></div>
+            <div class="absolute bottom-20 right-20 w-28 h-28 bg-blue-400 bg-opacity-15 rounded-full animate-spin-slow"></div>
+        </div>
+
+        <div class="text-center z-10 max-w-5xl mx-auto">
+            <h1 class="text-6xl md:text-8xl lg:text-9xl font-black mb-8 animate-fade-in">
+                <span class="block text-gradient">Hi, I'm</span>
+                <span class="block text-white drop-shadow-2xl">Prahlad Yadav</span>
+            </h1>
+            
+            <div class="mb-12">
+                <p id="typewriter" class="text-xl md:text-3xl text-white font-light min-h-[2em]"></p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <button class="px-8 py-4 bg-white text-gray-900 rounded-full font-bold text-lg hover-lift hover:bg-yellow-300 transition-colors duration-300">
+                    View My Work
+                </button>
+                <button class="px-8 py-4 border-2 border-white text-white rounded-full font-bold text-lg hover-lift hover:bg-white hover:text-gray-900 transition-all duration-300">
+                    Get In Touch
+                </button>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+                <div class="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-5xl font-bold text-white text-center mb-16">About Me</h2>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="glass rounded-3xl p-8 hover-lift">
+                    <h3 class="text-3xl font-bold text-white mb-6">Creative Developer</h3>
+                    <p class="text-white text-lg leading-relaxed mb-6">
+                        I'm passionate about creating beautiful, functional, and user-friendly digital experiences. 
+                        With expertise in modern web technologies, I bring ideas to life through code.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-white text-sm">JavaScript</span>
+                        <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-white text-sm">React</span>
+                        <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-white text-sm">Node.js</span>
+                        <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full text-white text-sm">Design</span>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-3xl p-8 hover-lift">
+                    <div class="text-center">
+                        <div class="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-yellow-300 to-pink-400 rounded-full flex items-center justify-center text-6xl animate-pulse-slow">
+                            👋
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Let's Connect!</h3>
+                        <p class="text-white opacity-90">
+                            Always excited to collaborate on innovative projects and meet fellow creators.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-5xl font-bold text-white text-center mb-16">Skills & Expertise</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="text-white font-bold">Design</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">💻</div>
+                    <h3 class="text-white font-bold">Frontend</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">⚙️</div>
+                    <h3 class="text-white font-bold">Backend</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">📱</div>
+                    <h3 class="text-white font-bold">Mobile</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-white font-bold">DevOps</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-white font-bold">Analytics</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">🔧</div>
+                    <h3 class="text-white font-bold">Tools</h3>
+                </div>
+                
+                <div class="glass rounded-2xl p-6 hover-lift text-center">
+                    <div class="text-4xl mb-4">🌟</div>
+                    <h3 class="text-white font-bold">Innovation</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-5xl font-bold text-white mb-16">Let's Create Something Amazing</h2>
+            
+            <div class="glass rounded-3xl p-12 hover-lift">
+                <p class="text-xl text-white mb-8 leading-relaxed">
+                    Ready to bring your next project to life? Let's collaborate and create something extraordinary together!
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                    <button class="px-8 py-4 bg-gradient-to-r from-yellow-300 to-pink-400 text-gray-900 rounded-full font-bold text-lg hover-lift">
+                        📧 Send Email
+                    </button>
+                    <button class="px-8 py-4 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-full font-bold text-lg hover-lift">
+                        💼 LinkedIn
+                    </button>
+                    <button class="px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 text-white rounded-full font-bold text-lg hover-lift">
+                        🐙 GitHub
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 text-center">
+        <div class="max-w-6xl mx-auto">
+            <p class="text-white opacity-75">© 2025 Prahlad Yadav. Crafted with ❤️ and lots of ☕</p>
+        </div>
+    </footer>
+
+    <script>
+        // Typewriter effect
+        const texts = [
+            "Creative Developer 💻",
+            "UI/UX Designer 🎨", 
+            "Problem Solver 🚀",
+            "Tech Enthusiast 🌟"
+        ];
+        
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
+        
+        function typeWriter() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            
+            let typeSpeed = isDeleting ? 50 : 100;
+            
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+            }
+            
+            setTimeout(typeWriter, typeSpeed);
+        }
+        
+        typeWriter();
+        
+        // Mobile menu toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('-translate-x-full');
+        });
+        
+        // Close mobile menu when clicking on a link
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('-translate-x-full');
+            });
+        });
+        
+   
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+      
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('bg-opacity-80');
+            } else {
+                nav.classList.remove('bg-opacity-80');
+            }
+        });
+        
+        // Add entrance animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(section);
+        });
+        
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            
+            document.querySelectorAll('.absolute').forEach(element => {
+                if (element.classList.contains('animate-float') || 
+                    element.classList.contains('animate-bounce-slow') ||
+                    element.classList.contains('animate-pulse-slow') ||
+                    element.classList.contains('animate-spin-slow')) {
+                    element.style.transform = `translateY(${rate}px)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

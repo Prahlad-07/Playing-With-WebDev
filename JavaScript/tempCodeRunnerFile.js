@@ -1,0 +1,1 @@
+console.log(product(5,6,4));
