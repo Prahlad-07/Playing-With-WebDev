@@ -63,7 +63,6 @@
     </style>
 </head>
 <body class="gradient-bg min-h-screen overflow-x-hidden">
-    <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 glass">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
@@ -79,7 +78,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
     <div id="mobileMenu" class="fixed inset-0 z-40 glass transform -translate-x-full transition-transform duration-300 md:hidden">
         <div class="flex flex-col items-center justify-center h-full space-y-8 text-2xl">
             <a href="#home" class="text-white hover:text-yellow-300 transition-colors duration-300">Home</a>
@@ -88,10 +86,7 @@
             <a href="#contact" class="text-white hover:text-yellow-300 transition-colors duration-300">Contact</a>
         </div>
     </div>
-
-    <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center relative px-6">
-        <!-- Floating Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute top-20 left-20 w-32 h-32 bg-white bg-opacity-10 rounded-full animate-float"></div>
             <div class="absolute top-40 right-32 w-24 h-24 bg-yellow-300 bg-opacity-20 rounded-full animate-bounce-slow"></div>
@@ -119,7 +114,6 @@
             </div>
         </div>
 
-        <!-- Scroll Indicator -->
         <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
             <div class="w-6 h-10 border-2 border-white rounded-full flex justify-center">
                 <div class="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
@@ -127,7 +121,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="py-20 px-6">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-5xl font-bold text-white text-center mb-16">About Me</h2>
@@ -244,7 +237,7 @@
     </footer>
 
     <script>
-        // Typewriter effect
+ 
         const texts = [
             "Creative Developer 💻",
             "UI/UX Designer 🎨", 
@@ -283,7 +276,6 @@
         
         typeWriter();
         
-        // Mobile menu toggle
         const menuBtn = document.getElementById('menuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         
@@ -291,7 +283,6 @@
             mobileMenu.classList.toggle('-translate-x-full');
         });
         
-        // Close mobile menu when clicking on a link
         const mobileLinks = mobileMenu.querySelectorAll('a');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -323,7 +314,6 @@
             }
         });
         
-        // Add entrance animations on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -338,16 +328,13 @@
             });
         }, observerOptions);
         
-        // Observe all sections
         document.querySelectorAll('section').forEach(section => {
             section.style.opacity = '0';
             section.style.transform = 'translateY(20px)';
             section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
             observer.observe(section);
         });
-        
-        // Parallax effect for floating elements
-        window.addEventListener('scroll', () => {
+                window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const rate = scrolled * -0.5;
             
