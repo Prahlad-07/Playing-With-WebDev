@@ -5,4 +5,3 @@ console.log(arr);
 
 arr = arr.sort((a,b) => b-a);
 console.log(arr);
-

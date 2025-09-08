@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Analytics Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            margin: 8px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 300;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+
+        .date-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+            animation: countUp 2s ease-out;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .positive {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .negative {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-filters {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 255, 255, 0.3);
+            color: #fff;
+        }
+
+        .chart {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .line-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .chart-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.2;
+        }
+
+        .chart-line {
+            stroke: #4CAF50;
+            stroke-width: 3;
+            fill: none;
+            filter: drop-shadow(0 0 6px rgba(76, 175, 80, 0.5));
+            animation: drawLine 2s ease-in-out;
+        }
+
+        .chart-area {
+            fill: url(#gradient);
+            opacity: 0.3;
+            animation: fillArea 2s ease-in-out 0.5s both;
+        }
+
+        .chart-dot {
+            fill: #fff;
+            stroke: #4CAF50;
+            stroke-width: 3;
+            r: 4;
+            opacity: 0;
+            animation: showDot 0.5s ease-in-out forwards;
+        }
+
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .pie-segment {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            transform-origin: center;
+        }
+
+        .pie-segment:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .table-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            outline: none;
+            width: 200px;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        th:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        tbody tr {
+            transition: background 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status {
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status.active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .status.pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #FFC107;
+        }
+
+        .status.inactive {
+            background: rgba(244, 67, 54, 0.2);
+            color: #F44336;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes drawLine {
+            from { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+            to { stroke-dasharray: 1000; stroke-dashoffset: 0; }
+        }
+
+        @keyframes fillArea {
+            from { opacity: 0; }
+            to { opacity: 0.3; }
+        }
+
+        @keyframes showDot {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="logo">📊 Analytics Pro</div>
+            <div class="nav-item active" data-section="overview">
+                <span>📈</span> Overview
+            </div>
+            <div class="nav-item" data-section="sales">
+                <span>💰</span> Sales
+            </div>
+            <div class="nav-item" data-section="users">
+                <span>👥</span> Users
+            </div>
+            <div class="nav-item" data-section="products">
+                <span>📦</span> Products
+            </div>
+            <div class="nav-item" data-section="reports">
+                <span>📋</span> Reports
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <h1>Dashboard Overview</h1>
+                <div class="date-range">
+                    <input type="date" class="date-input" id="startDate">
+                    <span style="color: rgba(255,255,255,0.7);">to</span>
+                    <input type="date" class="date-input" id="endDate">
+                    <button class="filter-btn" id="refreshBtn">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">$0</div>
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-change positive">+12.5% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-label">Active Users</div>
+                    <div class="stat-change positive">+8.2% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-change negative">-2.1% from last month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="conversionRate">0%</div>
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-change positive">+5.7% from last month</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">
+                        Revenue Trends
+                        <div class="chart-filters">
+                            <button class="filter-btn active" data-period="7d">7D</button>
+                            <button class="filter-btn" data-period="30d">30D</button>
+                            <button class="filter-btn" data-period="90d">90D</button>
+                            <button class="filter-btn" data-period="1y">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart">
+                        <svg class="line-chart" id="revenueChart">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#4CAF50" stop-opacity="0.8"/>
+                                    <stop offset="100%" stop-color="#4CAF50" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Traffic Sources</div>
+                    <div class="chart">
+                        <svg class="pie-chart" id="pieChart"></svg>
+                        <div class="legend" id="pieLegend"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <div class="table-header">
+                    <h3>Recent Transactions</h3>
+                    <input type="text" class="search-box" placeholder="Search transactions..." id="searchInput">
+                </div>
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th data-sort="id">ID</th>
+                            <th data-sort="customer">Customer</th>
+                            <th data-sort="amount">Amount</th>
+                            <th data-sort="date">Date</th>
+                            <th data-sort="status">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        class DashboardApp {
+            constructor() {
+                this.currentSection = 'overview';
+                this.currentPeriod = '7d';
+                this.chartData = {
+                    revenue: {
+                        '7d': [12000, 15000, 13500, 18000, 16000, 20000, 22000],
+                        '30d': [150000, 180000, 165000, 200000, 185000, 220000, 240000, 210000, 195000, 225000, 250000, 230000, 205000, 245000, 260000, 235000, 215000, 255000, 275000, 250000, 230000, 265000, 285000, 270000, 245000, 275000, 295000, 280000, 260000, 290000],
+                        '90d': Array.from({length: 90}, (_, i) => Math.floor(Math.random() * 50000) + 100000),
+                        '1y': Array.from({length: 12}, (_, i) => Math.floor(Math.random() * 500000) + 1000000)
+                    }
+                };
+                
+                this.pieData = [
+                    { label: 'Organic Search', value: 45, color: '#4CAF50' },
+                    { label: 'Social Media', value: 25, color: '#2196F3' },
+                    { label: 'Direct Traffic', value: 20, color: '#FF9800' },
+                    { label: 'Referrals', value: 10, color: '#9C27B0' }
+                ];
+
+                this.transactions = [
+                    { id: '#TXN001', customer: 'John Doe', amount: '$1,250.00', date: '2024-03-15', status: 'active' },
+                    { id: '#TXN002', customer: 'Jane Smith', amount: '$850.00', date: '2024-03-14', status: 'pending' },
+                    { id: '#TXN003', customer: 'Mike Johnson', amount: '$2,100.00', date: '2024-03-14', status: 'active' },
+                    { id: '#TXN004', customer: 'Sarah Wilson', amount: '$650.00', date: '2024-03-13', status: 'inactive' },
+                    { id: '#TXN005', customer: 'Tom Brown', amount: '$1,875.00', date: '2024-03-13', status: 'active' },
+                    { id: '#TXN006', customer: 'Lisa Davis', amount: '$920.00', date: '2024-03-12', status: 'pending' },
+                    { id: '#TXN007', customer: 'Chris Miller', amount: '$1,450.00', date: '2024-03-12', status: 'active' },
+                    { id: '#TXN008', customer: 'Amy Taylor', amount: '$750.00', date: '2024-03-11', status: 'inactive' }
+                ];
+
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateStats();
+                this.renderLineChart();
+                this.renderPieChart();
+                this.renderTable();
+                this.setDefaultDates();
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentSection = e.target.dataset.section;
+                    });
+                });
+
+                // Chart filters
+                document.querySelectorAll('[data-period]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentPeriod = e.target.dataset.period;
+                        this.renderLineChart();
+                    });
+                });
+
+                // Search
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.filterTable(e.target.value);
+                });
+
+                // Table sorting
+                document.querySelectorAll('th[data-sort]').forEach(th => {
+                    th.addEventListener('click', (e) => {
+                        const field = e.target.dataset.sort;
+                        this.sortTable(field);
+                    });
+                });
+
+                // Refresh button
+                document.getElementById('refreshBtn').addEventListener('click', () => {
+                    this.refreshData();
+                });
+            }
+
+            setDefaultDates() {
+                const today = new Date();
+                const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                
+                document.getElementById('endDate').value = today.toISOString().split('T')[0];
+                document.getElementById('startDate').value = lastWeek.toISOString().split('T')[0];
+            }
+
+            updateStats() {
+                this.animateCounter('totalRevenue', 245678, '$');
+                this.animateCounter('totalUsers', 12543);
+                this.animateCounter('totalOrders', 1847);
+                this.animateCounter('conversionRate', 3.2, '', '%');
+            }
+
+            animateCounter(id, target, prefix = '', suffix = '') {
+                const element = document.getElementById(id);
+                let current = 0;
+                const increment = target / 100;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    
+                    let displayValue = Math.floor(current);
+                    if (id === 'totalRevenue') {
+                        displayValue = displayValue.toLocaleString();
+                    } else if (id === 'conversionRate') {
+                        displayValue = (current).toFixed(1);
+                    } else {
+                        displayValue = displayValue.toLocaleString();
+                    }
+                    
+                    element.textContent = `${prefix}${displayValue}${suffix}`;
+                }, 20);
+            }
+
+            renderLineChart() {
+                const svg = document.getElementById('revenueChart');
+                const data = this.chartData.revenue[this.currentPeriod];
+                const width = svg.clientWidth || 600;
+                const height = svg.clientHeight || 300;
+                const padding = 40;
+
+                svg.innerHTML = `
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#4CAF50" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#4CAF50" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+                `;
+
+                // Draw grid
+                const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                gridGroup.classList.add('chart-grid');
+                
+                for (let i = 0; i <= 5; i++) {
+                    const y = padding + (height - 2 * padding) * i / 5;
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', padding);
+                    line.setAttribute('y1', y);
+                    line.setAttribute('x2', width - padding);
+                    line.setAttribute('y2', y);
+                    line.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+                    gridGroup.appendChild(line);
+                }
+                svg.appendChild(gridGroup);
+
+                // Calculate points
+                const maxValue = Math.max(...data);
+                const points = data.map((value, index) => {
+                    const x = padding + (width - 2 * padding) * index / (data.length - 1);
+                    const y = height - padding - (height - 2 * padding) * value / maxValue;
+                    return `${x},${y}`;
+                }).join(' ');
+
+                // Draw area
+                const areaPoints = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+                const area = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                area.setAttribute('points', areaPoints);
+                area.classList.add('chart-area');
+                svg.appendChild(area);
+
+                // Draw line
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                line.setAttribute('points', points);
+                line.classList.add('chart-line');
+                svg.appendChild(line);
+
+                // Draw dots
+                data.forEach((value, index) => {
+                    const x = padding + (width - 2 * padding) * index / (data.length - 1);
+                    const y = height - padding - (height - 2 * padding) * value / maxValue;
+                    
+                    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    dot.setAttribute('cx', x);
+                    dot.setAttribute('cy', y);
+                    dot.classList.add('chart-dot');
+                    dot.style.animationDelay = `${index * 0.1}s`;
+                    
+                    dot.addEventListener('mouseenter', (e) => {
+                        this.showTooltip(e, `$${value.toLocaleString()}`);
+                    });
+                    
+                    dot.addEventListener('mouseleave', () => {
+                        this.hideTooltip();
+                    });
+                    
+                    svg.appendChild(dot);
+                });
+            }
+
+            renderPieChart() {
+                const svg = document.getElementById('pieChart');
+                const legend = document.getElementById('pieLegend');
+                const size = 200;
+                const radius = 80;
+                const centerX = size / 2;
+                const centerY = size / 2;
+
+                svg.setAttribute('width', size);
+                svg.setAttribute('height', size);
+                svg.innerHTML = '';
+                legend.innerHTML = '';
+
+                let currentAngle = -90;
+                const total = this.pieData.reduce((sum, item) => sum + item.value, 0);
+
+                this.pieData.forEach((item, index) => {
+                    const angle = (item.value / total) * 360;
+                    const endAngle = currentAngle + angle;
+                    
+                    const x1 = centerX + radius * Math.cos(currentAngle * Math.PI / 180);
+                    const y1 = centerY + radius * Math.sin(currentAngle * Math.PI / 180);
+                    const x2 = centerX + radius * Math.cos(endAngle * Math.PI / 180);
+                    const y2 = centerY + radius * Math.sin(endAngle * Math.PI / 180);
+
+                    const largeArcFlag = angle > 180 ? 1 : 0;
+
+                    const pathData = [
+                        `M ${centerX} ${centerY}`,
+                        `L ${x1} ${y1}`,
+                        `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
+                        'Z'
+                    ].join(' ');
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    path.setAttribute('fill', item.color);
+                    path.classList.add('pie-segment');
+                    
+                    path.addEventListener('mouseenter', (e) => {
+                        this.showTooltip(e, `${item.label}: ${item.value}%`);
+                    });
+                    
+                    path.addEventListener('mouseleave', () => {
+                        this.hideTooltip();
+                    });
+
+                    svg.appendChild(path);
+
+                    // Create legend item
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'legend-item';
+                    legendItem.innerHTML = `
+                        <div class="legend-color" style="background: ${item.color}"></div>
+                        <span>${item.label} (${item.value}%)</span>
+                    `;
+                    legend.appendChild(legendItem);
+
+                    currentAngle = endAngle;
+                });
+            }
+
+            renderTable() {
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = '';
+
+                this.transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.id}</td>
+                        <td>${transaction.customer}</td>
+                        <td>${transaction.amount}</td>
+                        <td>${transaction.date}</td>
+                        <td><span class="status ${transaction.status}">${transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            filterTable(searchTerm) {
+                const rows = document.querySelectorAll('#tableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
+                });
+            }
+
+            sortTable(field) {
+                this.transactions.sort((a, b) => {
+                    let aVal = a[field];
+                    let bVal = b[field];
+                    
+                    if (field === 'amount') {
+                        aVal = parseFloat(aVal.replace(/[\$,]/g, ''));
+                        bVal = parseFloat(bVal.replace(/[\$,]/g, ''));
+                    } else if (field === 'date') {
+                        aVal = new Date(aVal);
+                        bVal = new Date(bVal);
+                    }
+                    
+                    return aVal > bVal ? 1 : -1;
+                });
+                
+                this.renderTable();
+            }
+
+            showTooltip(event, text) {
+                const tooltip = document.getElementById('tooltip');
+                tooltip.textContent = text;
+                tooltip.style.left = event.pageX + 10 + 'px';
+                tooltip.style.top = event.pageY - 10 + 'px';
+                tooltip.classList.add('show');
+            }
+
+            hideTooltip() {
+                document.getElementById('tooltip').classList.remove('show');
+            }
+
+            refreshData() {
+                const refreshBtn = document.getElementById('refreshBtn');
+                refreshBtn.innerHTML = '<div class="loading"></div> Refreshing...';
+                
+                setTimeout(() => {
+                    // Simulate data refresh
+                    this.chartData.revenue['7d'] = this.chartData.revenue['7d'].map(val => 
+                        val + (Math.random() - 0.5) * 5000
+                    );
+                    
+                    this.updateStats();
+                    this.renderLineChart();
+                    this.renderPieChart();
+                    
+                    refreshBtn.innerHTML = '🔄 Refresh';
+                }, 1500);
+            }
+        }
+
+        // Initialize the dashboard when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DashboardApp();
+        });
+
+        // Real-time data simulation
+        setInterval(() => {
+            const stats = ['totalRevenue', 'totalUsers', 'totalOrders'];
+            const randomStat = stats[Math.floor(Math.random() * stats.length)];
+            const element = document.getElementById(randomStat);
+            const currentValue = parseInt(element.textContent.replace(/[^\d]/g, ''));
+            const change = Math.floor(Math.random() * 100) - 50;
+            const newValue = Math.max(0, currentValue + change);
+            
+            if (randomStat === 'totalRevenue') {
+                element.textContent = ' + newValue.toLocaleString();
+            } else {
+                element.textContent = newValue.toLocaleString();
+            }
+            
+            // Add a subtle flash effect
+            element.style.transition = 'all 0.3s ease';
+            element.style.transform = 'scale(1.05)';
+            element.style.color = change > 0 ? '#4CAF50' : '#F44336';
+            
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+                element.style.color = '#fff';
+            }, 300);
+        }, 5000);
+
+        // Add some interactive particle effects
+        function createParticles() {
+            const particles = [];
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '-1';
+            canvas.style.opacity = '0.1';
+            
+            document.body.appendChild(canvas);
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 3 + 1
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+                    
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fill();
+                });
+                
+                // Draw connections
+                particles.forEach((p1, i) => {
+                    particles.slice(i + 1).forEach(p2 => {
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${(100 - distance) / 100 * 0.2})`;
+                            ctx.stroke();
+                        }
+                    });
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        createParticles();
+    </script>
+</body>
+</html>
