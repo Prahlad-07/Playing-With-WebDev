@@ -1,0 +1,12 @@
+[
+  { "id": 1, "title": "The Great Gatsby", "genre": "Classic", "publish": 1925, "rating": 4.2, "author": "F. Scott Fitzgerald" },
+  { "id": 2, "title": "To Kill a Mockingbird", "genre": "Fiction", "publish": 1960, "rating": 4.8, "author": "Harper Lee" },
+  { "id": 3, "title": "1984", "genre": "Dystopian", "publish": 1949, "rating": 4.6, "author": "George Orwell" },
+  { "id": 4, "title": "Harry Potter and the Sorcerer's Stone", "genre": "Fantasy", "publish": 1997, "rating": 4.9, "author": "J.K. Rowling" },
+  { "id": 5, "title": "The Da Vinci Code", "genre": "Thriller", "publish": 2003, "rating": 3.9, "author": "Dan Brown" },
+  { "id": 6, "title": "The Hobbit", "genre": "Fantasy", "publish": 1937, "rating": 4.7, "author": "J.R.R. Tolkien" },
+  { "id": 7, "title": "Pride and Prejudice", "genre": "Romance", "publish": 1813, "rating": 4.5, "author": "Jane Austen" },
+  { "id": 8, "title": "The Catcher in the Rye", "genre": "Classic", "publish": 1951, "rating": 3.8, "author": "J.D. Salinger" },
+  { "id": 9, "title": "The Alchemist", "genre": "Fiction", "publish": 1988, "rating": 4.3, "author": "Paulo Coelho" },
+  { "id": 10, "title": "The Road", "genre": "Post-Apocalyptic", "publish": 2006, "rating": 4.0, "author": "Cormac McCarthy" }
+]
